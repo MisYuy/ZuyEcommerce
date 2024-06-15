@@ -6,22 +6,25 @@ on:
       - main
 
 jobs:
-  test:
+ test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Download Theme Unit Test Data
-        run: curl -O https://wp-themes.com/wp-content/themes/twentytwentyone/theme-unit-test-data.xml
+      - name: Install WP-CLI
+        run: |
+          curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          chmod +x wp-cli.phar
+          sudo mv wp-cli.phar /usr/local/bin/wp
+      - name: Check if wp is installed
+        run: wp --info
 
-      - name: Import Theme Unit Test Data
-        run: wp import theme-unit-test-data.xml --authors=create
+      - name: Download Theme Unit Test Data
+        run: wp core download --locale=en_US
 
       - name: Run WordPress Theme Unit Tests
         run: wp theme check
-
-      # Add more tests here if needed (e.g., PHP linting, sitemap/feed check, etc.)
 
   deploy:
     needs: test  # Only run deployment if tests pass
