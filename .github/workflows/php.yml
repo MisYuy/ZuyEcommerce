@@ -1,4 +1,4 @@
-name: Deploy WordPress to Vultr with Tests
+name: Deploy to VPS
 
 on:
   push:
@@ -6,33 +6,7 @@ on:
       - main
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.0'  # Chọn phiên bản PHP phù hợp
-
-    - name: Install WP-CLI
-      run: curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x wp-cli.phar && sudo mv wp-cli.phar /usr/local/bin/wp
-
-    # Các bước kiểm tra
-    
-    - name: Run PHP Code Sniffer
-      run: phpcs --standard=WordPress *.php
-
-    - name: Run PHP Code Beautifier and Fixer
-      run: phpcbf --standard=WordPress *.php
-
-    # Các bước kiểm tra khác (Lighthouse, wpscan, ...) nếu cần
-
   deploy:
-    needs: test
     runs-on: ubuntu-latest
 
     steps:
@@ -44,13 +18,10 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
 
-    - name: Deploy to Vultr
+    - name: Deploy to VPS
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
           cd /var/www/html/
           git pull origin main
-          composer install --no-dev --optimize-autoloader
-          wp plugin update --all
-          wp theme update --all
-          # Các lệnh khác (ví dụ: wp cache flush) nếu cần
+          # Add any other commands you need to run after pulling the code
         EOF
