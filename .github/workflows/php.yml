@@ -20,7 +20,7 @@ jobs:
 
     - name: Deploy to VPS
       run: |
-        ssh -o StrictHostKeyChecking=no root@45.76.184.138 << 'EOF'
+        ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
           cd /var/www/html/
           git pull origin main
           # Add any other commands you need to run after pulling the code
