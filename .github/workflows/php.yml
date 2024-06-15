@@ -1,4 +1,4 @@
-name: Deploy to VPS
+name: Deploy to VPS with Testing
 
 on:
   push:
@@ -6,22 +6,39 @@ on:
       - main
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+      - name: Download Theme Unit Test Data
+        run: curl -O https://wp-themes.com/wp-content/themes/twentytwentyone/theme-unit-test-data.xml
 
-    - name: Deploy to VPS
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
-          cd /var/www/html/
-          git pull origin main
-          # Add any other commands you need to run after pulling the code
-        EOF
+      - name: Import Theme Unit Test Data
+        run: wp import theme-unit-test-data.xml --authors=create
+
+      - name: Run WordPress Theme Unit Tests
+        run: wp theme check
+
+      # Add more tests here if needed (e.g., PHP linting, sitemap/feed check, etc.)
+
+  deploy:
+    needs: test  # Only run deployment if tests pass
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+      - name: Deploy to VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
+            cd /var/www/html/
+            git pull origin main
+            # Add any other commands you need to run after pulling the code (e.g., restarting services)
+          EOF
