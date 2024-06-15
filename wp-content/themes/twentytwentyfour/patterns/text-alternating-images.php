@@ -15,7 +15,7 @@
 		<div class="wp-block-group">
 
 			<!-- wp:heading {"textAlign":"center","className":"is-style-asterisk"} -->
-			<h2 class="wp-block-heading has-text-align-center is-style-asterisk"><?php echo esc_html_x( 'An array of resources', 'Sample heading content', 'twentytwentyfour' ); ?></h2>
+			<h2 class="wp-block-heading has-text-align-center is-style-asterisk"><?php echo esc_html_x( 'Dinh cao vai', 'Sample heading content', 'twentytwentyfour' ); ?></h2>
 			<!-- /wp:heading -->
 
 			<!-- wp:paragraph {"align":"center","style":{"layout":{"selfStretch":"fit","flexSize":null}}} -->
