@@ -33,7 +33,7 @@
           <?php } ?>
         </div>
         <div class="copywrap text-center">
-          <p><a href="<?php echo esc_url(JUICE_CENTER_FOOTER_LINK); ?>" target="_blank"><?php echo esc_html(get_theme_mod('classic_bakery_copyright_line',__('Juice Center WordPress Theme','juice-center'))); ?></a> <?php echo esc_html('By Classic Templates','juice-center'); ?></p>
+          <p><a href="<?php echo esc_url(JUICE_CENTER_FOOTER_LINK); ?>" target="_blank"><?php echo esc_html(get_theme_mod('classic_bakery_copyright_line',__('Juice Center WordPress Theme','juice-center'))); ?></a> <?php echo esc_html('NguyenHoangDuy','juice-center'); ?></p>
         </div>
         <div class="clear"></div>
       </div>      
