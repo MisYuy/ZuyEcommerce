@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
- test:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,11 +17,19 @@ jobs:
           curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
           chmod +x wp-cli.phar
           sudo mv wp-cli.phar /usr/local/bin/wp
+
       - name: Check if wp is installed
         run: wp --info
 
-      - name: Download Theme Unit Test Data
-        run: wp core download --locale=en_US
+      - name: Download WordPress
+        run: |
+          wp core download --locale=en_US
+
+      - name: Install WordPress 
+        run: |
+          wp core config --dbname=${{ secrets.DB_NAME }} --dbuser=${{ secrets.DB_USER }} --dbpass=${{ secrets.DB_PASSWORD }} --dbhost=${{ secrets.DB_HOST }}
+          wp core install --url=${{ secrets.WORDPRESS_URL }} --title=${{ secrets.WORDPRESS_TITLE }} --admin_user=${{ secrets.WORDPRESS_ADMIN_USER }} --admin_password=${{ secrets.WORDPRESS_ADMIN_PASSWORD }} --admin_email=${{ secrets.WORDPRESS_ADMIN_EMAIL }}
+          wp plugin activate theme-check
 
       - name: Run WordPress Theme Unit Tests
         run: wp theme check
