@@ -13,6 +13,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4' # hoặc phiên bản PHP mà bạn sử dụng
+        extensions: mbstring, xml, curl, dom
+
+    - name: Install Composer dependencies
+      run: composer install --no-progress --no-suggest --prefer-dist
+
+    - name: Run PHPUnit tests
+      run: vendor/bin/phpunit
+
     - name: Setup SSH
       uses: webfactory/ssh-agent@v0.5.3
       with:
